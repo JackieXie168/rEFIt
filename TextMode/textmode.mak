@@ -1,6 +1,5 @@
 #
-# ebounce/ebounce.mak
-# Build control file for the elilo launcher
+# refit.mak
 # 
 
 #
@@ -13,16 +12,16 @@
 # Set the base output name and entry point
 #
 
-BASE_NAME         = ebounce
-IMAGE_ENTRY_POINT = EBounceMain
+BASE_NAME         = TextMode
+IMAGE_ENTRY_POINT = TextModeMain
 
 #
 # Globals needed by master.mak
 #
 
 TARGET_APP = $(BASE_NAME)
-SOURCE_DIR = $(SDK_INSTALL_DIR)\refit\$(BASE_NAME)
-BUILD_DIR  = $(SDK_BUILD_DIR)\refit\$(BASE_NAME)
+SOURCE_DIR = $(SDK_INSTALL_DIR)\apps\$(BASE_NAME)
+BUILD_DIR  = $(SDK_BUILD_DIR)\apps\$(BASE_NAME)
 
 #
 # Include paths
@@ -30,8 +29,7 @@ BUILD_DIR  = $(SDK_BUILD_DIR)\refit\$(BASE_NAME)
 
 !include $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR)\makefile.hdr
 INC = -I $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR) \
-      -I $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR)\$(PROCESSOR) \
-      -I $(SDK_INSTALL_DIR)\refit\include $(INC)
+      -I $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR)\$(PROCESSOR) $(INC)
 
 #
 # Libraries

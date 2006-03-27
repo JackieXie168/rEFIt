@@ -1,31 +1,67 @@
 #
 # refit.mak
-# Build control file for all rEFIt components
 # 
 
-SOURCE_DIR = $(SDK_INSTALL_DIR)\refit
+#
+# Include sdk.env environment
+#
 
 !include $(SDK_INSTALL_DIR)\build\$(SDK_BUILD_ENV)\sdk.env
 
-all :
-	cd $(SOURCE_DIR)\refit
-	nmake -f refit.mak all
-	cd $(SOURCE_DIR)
+#
+# Set the base output name and entry point
+#
 
-	cd $(SOURCE_DIR)\refitl
-	nmake -f refitl.mak all
-	cd $(SOURCE_DIR)
+BASE_NAME         = refit
+IMAGE_ENTRY_POINT = RefitMain
 
-	cd $(SOURCE_DIR)\ebounce
-	nmake -f ebounce.mak all
-	cd $(SOURCE_DIR)
+#
+# Globals needed by master.mak
+#
 
-	cd $(SOURCE_DIR)\TextMode
-	nmake -f TextMode.mak all
-	cd $(SOURCE_DIR)
+TARGET_APP = $(BASE_NAME)
+SOURCE_DIR = $(SDK_INSTALL_DIR)\apps\$(BASE_NAME)
+BUILD_DIR  = $(SDK_BUILD_DIR)\apps\$(BASE_NAME)
 
-!IF "$(PROCESSOR)" == "Ia64"
+#
+# Include paths
+#
 
+!include $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR)\makefile.hdr
+INC = -I $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR) \
+      -I $(SDK_INSTALL_DIR)\include\$(EFI_INC_DIR)\$(PROCESSOR) $(INC)
 
-!ENDIF
+#
+# Libraries
+#
 
+LIBS = $(LIBS) $(SDK_BUILD_DIR)\lib\libefi\libefi.lib
+
+#
+# Default target
+#
+
+all : dirs $(LIBS) $(OBJECTS)
+
+#
+# Program object files
+#
+
+OBJECTS = $(OBJECTS) \
+    $(BUILD_DIR)\main.obj \
+    $(BUILD_DIR)\menu.obj \
+    $(BUILD_DIR)\lib.obj  \
+
+#
+# Source file dependencies
+#
+
+$(BUILD_DIR)\main.obj : $(*B).c $(INC_DEPS)
+$(BUILD_DIR)\menu.obj : $(*B).c $(INC_DEPS)
+$(BUILD_DIR)\lib.obj  : $(*B).c $(INC_DEPS)
+
+#
+# Handoff to master.mak
+#
+
+!include $(SDK_INSTALL_DIR)\build\master.mak
